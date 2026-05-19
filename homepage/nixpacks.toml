@@ -1,0 +1,16 @@
+providers = ["node"]
+
+[variables]
+NODE_VERSION = "22"
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "pnpm-10_x"]
+
+[phases.install]
+cmds = ["cd .. && pnpm install --frozen-lockfile=false"]
+
+[phases.build]
+cmds = ["cd .. && pnpm --filter homepage build"]
+
+[start]
+cmd = "cd .. && npx --yes serve -s homepage/dist -l tcp://0.0.0.0:$PORT"

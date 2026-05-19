@@ -1,0 +1,20 @@
+providers = ["node"]
+
+[variables]
+NODE_VERSION = "22"
+
+[phases.setup]
+nixPkgs = ["nodejs_22", "pnpm-10_x"]
+
+[phases.install]
+cmds = ["cd ../../.. && pnpm install --frozen-lockfile=false"]
+
+[phases.build]
+# Build the core package first (dashboard depends on it), then the dashboard.
+cmds = [
+  "cd ../../.. && pnpm --filter @understand-anything/core build",
+  "cd ../../.. && pnpm --filter @understand-anything/dashboard build"
+]
+
+[start]
+cmd = "cd ../../.. && npx --yes serve -s understand-anything-plugin/packages/dashboard/dist -l tcp://0.0.0.0:$PORT"
